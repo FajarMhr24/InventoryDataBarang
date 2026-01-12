@@ -1,17 +1,15 @@
-<?php
-require_once '../app/models/Item.php';
+<?php 
+// HAPUS "extends Controller" kalau di Itemcontroller gak ada
+class Dashboard { 
 
-class Dashboard {
-    public function index() {
-        if (session_status() == PHP_SESSION_NONE) { session_start(); }
-        if(!isset($_SESSION['user_id'])) { header("Location: /uas/public/"); exit; }
+    public function index()
+    {
+        // 1. SET TIMEZONE 
+        date_default_timezone_set('Asia/Jakarta');
 
-        $itemModel = new Item();
-        
-        $data['lowStock'] = $itemModel->getLowStock();
-        
+        // 2. LOGIKA JAM
         $jam = date('H');
-        if ($jam >= 4 && $jam < 11) {
+        if ($jam >= 5 && $jam < 11) {
             $sapaan = "Selamat Pagi";
         } elseif ($jam >= 11 && $jam < 15) {
             $sapaan = "Selamat Siang";
@@ -21,12 +19,43 @@ class Dashboard {
             $sapaan = "Selamat Malam";
         }
 
+        // 3. DATA DASAR
+        $data['judul'] = 'Dashboard';
+        // Pastikan session udah start di index.php
+        $data['nama'] = isset($_SESSION['nama_lengkap']) ? $_SESSION['nama_lengkap'] : 'Admin'; 
         $data['sapaan'] = $sapaan;
-        $data['nama'] = $_SESSION['nama'];
-        $data['title'] = "Dashboard Admin";
+        
+        // 4. PANGGIL MODEL
+        require_once '../app/models/Item.php';
+        $itemModel = new Item();
+        
+        // Ambil Data Low Stock
+        $data['lowStock'] = $itemModel->getLowStock(); 
+
+        // --- [BARU] LOGIKA CHART STATISTIK ---
+        // Ambil data jumlah barang per kategori
+        $stats = $itemModel->getItemCountByCategory(); 
+
+        // Pisahin jadi dua array: Label (Nama) dan Data (Angka)
+        $labels = [];
+        $totals = [];
+        
+        foreach ($stats as $row) {
+            $labels[] = $row['nama_kategori'];
+            $totals[] = $row['total'];
+        }
+
+        // Encode ke JSON biar bisa dibaca Javascript di View
+        $data['chart_labels'] = json_encode($labels);
+        $data['chart_data'] = json_encode($totals);
+        // -------------------------------------
+
+        // 5. LOAD VIEW
+        // Kita extract data biar jadi variabel ($nama, $chart_labels, dll)
+        extract($data);
 
         require_once '../app/views/layout/header.php';
-        require_once '../app/views/admin/dashboardAdmin.php';
+        require_once '../app/views/admin/dashboardAdmin.php'; 
         require_once '../app/views/layout/footer.php';
     }
 }
