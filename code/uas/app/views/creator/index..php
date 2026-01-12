@@ -51,7 +51,7 @@
                             <span class="fw-bold text-secondary">Kampus</span>
                             <span class="text-dark">Univ. Pelita Bangsa</span>
                         </li>
-                         <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                          <li class="list-group-item d-flex justify-content-between align-items-center p-3">
                             <span class="fw-bold text-secondary">Mata Kuliah</span>
                             <span class="text-dark">Pemrograman Web 1</span>
                         </li>
