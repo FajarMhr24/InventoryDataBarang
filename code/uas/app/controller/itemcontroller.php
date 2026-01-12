@@ -1,81 +1,45 @@
 <?php
-require_once '../app/models/Item.php';
+require_once '../app/models/User.php';
 
-class Itemcontroller {
+class Profile {
     
-    public function index($page = 1) {
+    public function __construct() {
+        if (session_status() == PHP_SESSION_NONE) { session_start(); }
         if(!isset($_SESSION['user_id'])) { header("Location: /uas/public/"); exit; }
+    }
 
-        $itemModel = new Item();
+    public function index() {
+        $userModel = new User();
+        $data['user'] = $userModel->getUserById($_SESSION['user_id']); 
+        $data['title'] = "Profil Saya";
         
-
-        $keyword = isset($_GET['search']) ? $_GET['search'] : null;
-        $limit = 5; 
-        $page = (int)$page;
-        $start = ($page > 1) ? ($page * $limit) - $limit : 0;
-
-        $data['items'] = $itemModel->getAllPaginated($start, $limit, $keyword);
-        $data['categories'] = $itemModel->getCategories();
-
-        $totalData = $itemModel->countAll($keyword);
-        $data['totalPages'] = ceil($totalData / $limit);
-        $data['currentPage'] = $page;
-        $data['keyword'] = $keyword; 
-
         require_once '../app/views/layout/header.php';
-        require_once '../app/views/admin/items_list.php';
+        require_once '../app/views/profile/index.php';
         require_once '../app/views/layout/footer.php';
     }
 
-    public function simpan() {
-    if(isset($_POST['simpan'])) {
-        require_once '../app/models/Item.php';
-        $itemModel = new Item();
-        
-        $data = [
-            'kode' => $_POST['kode_barang'],
-            'nama' => $_POST['nama_barang'],
-            'stok' => $_POST['stok'],
+    public function upload() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['foto'])) {
+            $file = $_FILES['foto'];
             
-            // UBAH BARIS INI JADI GINI:
-            'category_id' => $_POST['category_id'] 
-        ];
-        
-        $itemModel->add($data);
-    }
-    header("Location: /uas/public/itemcontroller");
-}
-    public function hapus($id) {
-        $itemModel = new Item();
-        $itemModel->hapus($id);
-        header("Location: /uas/public/itemcontroller");
-    }
-    public function edit($id) {
-        if(!isset($_SESSION['user_id'])) { header("Location: /uas/public/"); exit; }
-        
-        $itemModel = new Item();
-        $data['item'] = $itemModel->getById($id);      
-        $data['categories'] = $itemModel->getCategories(); 
-        
-        require_once '../app/views/layout/header.php';
-        require_once '../app/views/admin/edit_item.php'; 
-        require_once '../app/views/layout/footer.php';
-    }
+            $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+            $allowed = ['jpg', 'jpeg', 'png'];
 
-    public function update() {
-        if(isset($_POST['update'])) {
-            $itemModel = new Item();
-            $data = [
-                'id' => $_POST['id'],
-                'kode' => $_POST['kode_barang'],
-                'nama' => $_POST['nama_barang'],
-                'stok' => $_POST['stok'],
-                'category_id' => $_POST['category_id']
-            ];
-            $itemModel->update($data);
+            if ($file['error'] == UPLOAD_ERR_OK && in_array($ext, $allowed) && $file['size'] <= 2*1024*1024) {
+                $newName = 'profile_' . $_SESSION['user_id'] . '_' . time() . '.' . $ext;
+                $target = '../public/uploads/' . $newName;
+
+                if (move_uploaded_file($file['tmp_name'], $target)) {
+                   
+                    $userModel = new User();
+                    $userModel->updateFoto($_SESSION['user_id'], $newName);
+                    
+                    echo "<script>alert('Berhasil ganti foto profil!'); window.location='/uas/public/profile';</script>";
+                    return;
+                }
+            }
+            echo "<script>alert('Gagal! Cek format (JPG/PNG) & ukuran (Maks 2MB).'); window.location='/uas/public/profile';</script>";
         }
-        header("Location: /uas/public/itemcontroller");
     }
 }
-  
 ?>
