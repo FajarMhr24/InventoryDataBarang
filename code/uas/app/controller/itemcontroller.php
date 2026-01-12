@@ -20,7 +20,7 @@ class Itemcontroller {
         $totalData = $itemModel->countAll($keyword);
         $data['totalPages'] = ceil($totalData / $limit);
         $data['currentPage'] = $page;
-        $data['keyword'] = $keyword; /
+        $data['keyword'] = $keyword; 
 
         require_once '../app/views/layout/header.php';
         require_once '../app/views/admin/items_list.php';
@@ -28,22 +28,26 @@ class Itemcontroller {
     }
 
     public function simpan() {
-        if(isset($_POST['simpan'])) {
-            $itemModel = new Item();
-            $data = [
-                'kode' => $_POST['kode_barang'],
-                'nama' => $_POST['nama_barang'],
-                'stok' => $_POST['stok'],
-                'kategori' => $_POST['category_id']
-            ];
-            $itemModel->add($data);
-        }
-        header("Location: /uas/public/itemcontroller");
+    if(isset($_POST['simpan'])) {
+        require_once '../app/models/Item.php';
+        $itemModel = new Item();
+        
+        $data = [
+            'kode' => $_POST['kode_barang'],
+            'nama' => $_POST['nama_barang'],
+            'stok' => $_POST['stok'],
+            
+            // UBAH BARIS INI JADI GINI:
+            'category_id' => $_POST['category_id'] 
+        ];
+        
+        $itemModel->add($data);
     }
-
+    header("Location: /uas/public/itemcontroller");
+}
     public function hapus($id) {
         $itemModel = new Item();
-        $itemModel->delete($id);
+        $itemModel->hapus($id);
         header("Location: /uas/public/itemcontroller");
     }
     public function edit($id) {
@@ -54,7 +58,7 @@ class Itemcontroller {
         $data['categories'] = $itemModel->getCategories(); 
         
         require_once '../app/views/layout/header.php';
-        require_once '../app/views/admin/edit_item.php'; /
+        require_once '../app/views/admin/edit_item.php'; 
         require_once '../app/views/layout/footer.php';
     }
 
