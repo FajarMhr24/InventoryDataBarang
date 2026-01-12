@@ -104,7 +104,7 @@ class Item {
         return $stmt->execute();
     }
 
-    // --- 👇 INI FUNGSI BARU YANG LO CARI 👇 ---
+    
     public function getItemCountByCategory() {
         $sql = "SELECT c.nama_kategori, COUNT(i.id) as total 
                 FROM items i 
