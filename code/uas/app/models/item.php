@@ -3,6 +3,7 @@ class Item {
     private $db;
 
     public function __construct() {
+        // Asumsi class Database lo return object PDO
         $this->db = (new Database())->getConnection();
     }
 
@@ -31,6 +32,7 @@ class Item {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
     public function countAll($keyword = null) {
         $sql = "SELECT COUNT(*) as total FROM items";
         if($keyword) {
@@ -52,7 +54,7 @@ class Item {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function simpan($data) {
+    public function simpan($data) { // Note: Di controller lo pake method 'add', sesuaikan ya.
         $sql = "INSERT INTO items (kode_barang, nama_barang, stok, category_id) VALUES (:kode, :nama, :stok, :kategori)";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':kode', $data['kode']);
@@ -61,10 +63,21 @@ class Item {
         $stmt->bindParam(':kategori', $data['category_id']);
         return $stmt->execute();
     }
+
+    // Alias fungsi add biar gak error kalau controller manggil add
+    public function add($data) {
+        return $this->simpan($data);
+    }
+
     public function hapus($id) {
         $stmt = $this->db->prepare("DELETE FROM items WHERE id = :id");
         $stmt->bindParam(':id', $id);
         return $stmt->execute();
+    }
+
+    // Alias fungsi delete biar gak error kalau controller manggil delete
+    public function delete($id) {
+        return $this->hapus($id);
     }
 
     public function getLowStock() {
@@ -72,12 +85,14 @@ class Item {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
     public function getById($id) {
         $stmt = $this->db->prepare("SELECT * FROM items WHERE id = :id");
         $stmt->bindParam(":id", $id);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
     public function update($data) {
         $sql = "UPDATE items SET kode_barang=:kode, nama_barang=:nama, stok=:stok, category_id=:kategori WHERE id=:id";
         $stmt = $this->db->prepare($sql);
@@ -87,6 +102,18 @@ class Item {
         $stmt->bindParam(':kategori', $data['category_id']);
         $stmt->bindParam(':id', $data['id']);
         return $stmt->execute();
+    }
+
+    // --- 👇 INI FUNGSI BARU YANG LO CARI 👇 ---
+    public function getItemCountByCategory() {
+        $sql = "SELECT c.nama_kategori, COUNT(i.id) as total 
+                FROM items i 
+                JOIN categories c ON i.category_id = c.id 
+                GROUP BY c.nama_kategori";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
 ?>
