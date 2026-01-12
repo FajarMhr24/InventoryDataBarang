@@ -37,23 +37,29 @@
             <div class="card-header py-3 d-flex justify-content-between align-items-center">
                 <h6 class="m-0 font-weight-bold text-primary">Daftar Barang</h6>
                 
-                <form action="/uas/public/itemcontroller/index" method="GET" class="d-flex">
-                    <input type="text" name="search" class="form-control form-control-sm me-2" 
-                           placeholder="Cari barang..." value="<?= $data['keyword'] ?>">
-                    <button type="submit" class="btn btn-sm btn-outline-primary">Cari</button>
-                    <?php if($data['keyword']): ?>
-                        <a href="/uas/public/itemcontroller" class="btn btn-sm btn-outline-secondary ms-1">Reset</a>
-                    <?php endif; ?>
-                </form>
+                <div class="d-flex">
+                    <button onclick="window.print()" class="btn btn-sm btn-dark me-2">
+                        <i class="bi bi-printer"></i> Print
+                    </button>
+
+                    <form action="/uas/public/itemcontroller/index" method="GET" class="d-flex">
+                        <input type="text" name="search" class="form-control form-control-sm me-2" 
+                               placeholder="Cari barang..." value="<?= $data['keyword'] ?>">
+                        <button type="submit" class="btn btn-sm btn-outline-primary">Cari</button>
+                        <?php if($data['keyword']): ?>
+                            <a href="/uas/public/itemcontroller" class="btn btn-sm btn-outline-secondary ms-1">Reset</a>
+                        <?php endif; ?>
+                    </form>
+                </div>
 
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered table-hover" width="100%" cellspacing="0">
+                    <table class="table table-bordered table-hover align-middle" width="100%" cellspacing="0">
                         <thead class="table-light">
                             <tr>
                                 <th>No</th>
-                                <th>Kode</th>
+                                <th class="text-center">QR Code</th> <th>Kode</th>
                                 <th>Nama</th>
                                 <th>Kategori</th>
                                 <th>Stok</th>
@@ -67,6 +73,11 @@
                             ?>
                             <tr>
                                 <td><?= $no++ ?></td>
+                                
+                                <td class="text-center">
+                                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=<?= $row['kode_barang'] ?>" 
+                                         alt="QR" width="50" height="50" class="img-thumbnail">
+                                </td>
                                 <td><span class="badge bg-secondary"><?= $row['kode_barang'] ?></span></td>
                                 <td><?= $row['nama_barang'] ?></td>
                                 <td><?= $row['nama_kategori'] ?></td>
@@ -74,19 +85,20 @@
                                     <?php if($row['stok'] < 5): ?>
                                         <span class="text-danger fw-bold"><?= $row['stok'] ?> (Low)</span>
                                     <?php else: ?>
-                                        <?= $row['stok'] ?>
+                                        <span class="text-success fw-bold"><?= $row['stok'] ?></span>
                                     <?php endif; ?>
                                 </td>
                                 <td>
-                                    <a href="/uas/public/itemcontroller/edit/<?= $row['id'] ?>" class="btn btn-warning btn-sm">Edit</a>
-                                    
-                                    <a href="/uas/public/itemcontroller/hapus/<?= $row['id'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin hapus?')">Hapus</a>
+                                    <div class="btn-group" role="group">
+                                        <a href="/uas/public/itemcontroller/edit/<?= $row['id'] ?>" class="btn btn-warning btn-sm">Edit</a>
+                                        <a href="/uas/public/itemcontroller/hapus/<?= $row['id'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Yakin hapus?')">Hapus</a>
+                                    </div>
                                 </td>
                             </tr>
                             <?php endforeach; ?>
                             
                             <?php if(empty($data['items'])): ?>
-                                <tr><td colspan="6" class="text-center">Data tidak ditemukan</td></tr>
+                                <tr><td colspan="7" class="text-center">Data tidak ditemukan</td></tr>
                             <?php endif; ?>
                         </tbody>
                     </table>
@@ -94,7 +106,6 @@
 
                 <nav aria-label="Page navigation">
                     <ul class="pagination justify-content-center mt-3">
-                        
                         <?php 
                         $prev = $data['currentPage'] - 1;
                         $searchParam = $data['keyword'] ? "?search=" . $data['keyword'] : "";
@@ -113,7 +124,6 @@
                         <li class="page-item <?= ($data['currentPage'] >= $data['totalPages']) ? 'disabled' : '' ?>">
                             <a class="page-link" href="/uas/public/itemcontroller/index/<?= $next . $searchParam ?>">Next</a>
                         </li>
-
                     </ul>
                 </nav>
 
