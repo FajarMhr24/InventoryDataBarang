@@ -8,7 +8,7 @@ Ini adalah halaman pertama yang muncul saat aplikasi diakses. Halaman ini berfun
 * Desain: Menggunakan komponen Card Bootstrap 5 yang responsif dan ditempatkan presisi di tengah layar (Center Alignment).
 
 # Halaman Utama 
-![foto](https://github.com/FajarMhr24/InventoryDataBarang/blob/4393a850797f27fd79c0c1ee05625560f5c0cb2b/img/Screenshot%202026-01-07%20023705.png)
+![foto](https://github.com/FajarMhr24/InventoryDataBarang/blob/7575e456e27c2173376cdcfcde41fbca7e8fe3e8/img/Screenshot%202026-01-14%20001559.png)
 
 Implementasi Halaman Dashboard (Beranda)
 
@@ -17,10 +17,12 @@ Setelah berhasil login, pengguna akan diarahkan ke Dashboard ini sebagai pusat n
 * Sapaan Dinamis: Sistem secara otomatis mendeteksi waktu saat ini (Pagi/Siang/Sore/Malam) dan menyapa pengguna berdasarkan nama akun yang sedang login.
 * Navigasi Cepat: Terdapat 3 kartu menu utama (Data Barang, Profil Pengguna, dan Info Sistem) untuk memudahkan akses ke modul-modul aplikasi.
 * Status Login: Memberikan indikasi visual bahwa sesi login pengguna sedang aktif dan aman.
+* Visualisasi Statistik: Menggunakan library Chart.js untuk menampilkan grafik Donut Chart yang memetakan persentase jumlah barang berdasarkan kategori. Data diambil langsung dari database menggunakan query aggregation.
+* Tooltip Informatif: Grafik bersifat interaktif; menampilkan detail jumlah unit dan persentase (%) saat kursor diarahkan (hover).
+* Time-Aware UI: Header dashboard otomatis menyesuaikan sapaan (Pagi/Siang/Sore/Malam) berdasarkan waktu server lokal.
 
 # Halaman tambah dan data barang
-![foto](https://github.com/FajarMhr24/InventoryDataBarang/blob/4393a850797f27fd79c0c1ee05625560f5c0cb2b/img/Screenshot%202026-01-07%20023724.png)
-
+![foto](https://github.com/FajarMhr24/InventoryDataBarang/blob/7575e456e27c2173376cdcfcde41fbca7e8fe3e8/img/Screenshot%202026-01-14%20001614.png)
 Halaman Kelola Inventaris (CRUD Barang)
 
 Ini adalah modul utama aplikasi di mana administrator dapat mengelola seluruh data stok barang. Halaman ini dibagi menjadi dua bagian utama untuk efisiensi penggunaan:Ini adalah modul utama aplikasi di mana administrator dapat mengelola seluruh data stok barang. Halaman ini dibagi menjadi dua bagian utama untuk efisiensi penggunaan:
