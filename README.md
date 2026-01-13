@@ -33,6 +33,8 @@ Ini adalah modul utama aplikasi di mana administrator dapat mengelola seluruh da
   * Search (Pencarian): Memudahkan pencarian barang spesifik berdasarkan nama atau kode.
   * Pagination: Membagi tampilan data menjadi 5 baris per halaman agar tabel tetap rapi meskipun data mencapai ratusan.
   * Action Buttons: Akses cepat untuk Mengedit atau Menghapus barang.
+  * Auto-Generate QR Code: Sistem secara otomatis membangkitkan QR Code unik untuk setiap barang menggunakan integrasi API eksternal.
+  * Mode Cetak (Print): Fitur cetak khusus yang membersihkan tampilan antarmuka (tanpa navigasi/sidebar) untuk mencetak label barang dan QR Code secara fisik.
 
 # Halaman Edit
 ![foto](https://github.com/FajarMhr24/InventoryDataBarang/blob/4393a850797f27fd79c0c1ee05625560f5c0cb2b/img/Screenshot%202026-01-07%20023808.png)
